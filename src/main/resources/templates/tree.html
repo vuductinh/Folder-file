@@ -8,17 +8,17 @@
     <title>Item List</title>
 </head>
 <body>
-<h1 class="text-primary">List of Items</h1>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-    </tr>
-    <tr th:each="item : ${tree}">
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.name}"></td>
-    </tr>
-</table>
+<!--<h1 class="text-primary">List of Items</h1>-->
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>ID</th>-->
+<!--        <th>Name</th>-->
+<!--    </tr>-->
+<!--    <tr th:each="item : ${items}">-->
+<!--        <td th:text="${item.id}"></td>-->
+<!--        <td th:text="${item.name}"></td>-->
+<!--    </tr>-->
+<!--</table>-->
 <style type="text/css">
 
 </style>
@@ -26,16 +26,39 @@
     <div class="row" style="margin-top:10px;">
         <div class="col-md-3" style="height: 98vh; overflow:scroll;">
             <label><i class="fa fa-folder"></i> Folder</label>
-            <ul>
-                <li><i class="fa fa-folder" aria-hidden="true"></i> Folder1</li>
-                <li> <i class="fa fa-folder" aria-hidden="true"></i> Folder2
-                    <ul>
-                        <li><i class="fa fa-file" aria-hidden="true"></i> File1</li>
-                        <li><i class="fa fa-file" aria-hidden="true"></i> File2</li>
+            <ul th:each="item : ${tree}">
+                <li>
+                    <span>
+                        <i class="fa fa-folder" aria-hidden="true"></i>
+                        <span th:text="${item.name}"></span>
+                    </span>
+                    <ul th:each="childrenFolder : ${item.children}">
+                        <li>
+                            <span>
+                                <i class="fa fa-folder" aria-hidden="true"></i>
+                                <span th:text="${childrenFolder.name}"></span>
+                            </span>
+                            <ul th:each="fileChildren : ${childrenFolder.files}">
+                                <li>
+                             <span>
+                                <i class="fa fa-file" aria-hidden="true"></i>
+                                <span th:text="${fileChildren.name}"></span>
+                            </span>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
-                <li><i class="fa fa-folder" aria-hidden="true"></i> Folder3</li>
-                <li><i class="fa fa-folder" aria-hidden="true"></i> Folder4</li>
+                <li>
+                    <ul th:each="file : ${item.files}">
+                        <li>
+                             <span>
+                                <i class="fa fa-file" aria-hidden="true"></i>
+                                <span th:text="${file.name}"></span>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div class="col-md-9">

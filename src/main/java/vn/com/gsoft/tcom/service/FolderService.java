@@ -1,6 +1,4 @@
 package vn.com.gsoft.tcom.service;
-
-import org.springframework.web.multipart.MultipartFile;
 import vn.com.gsoft.tcom.entity.Folder;
 
 import java.util.List;
@@ -8,5 +6,7 @@ import java.util.List;
 public interface FolderService {
     List<Folder> getFolderTree () throws Exception;
 
-    void uploadFolder(List<MultipartFile> files) throws Exception;
+    Folder createFolder(Long idFolder, String folderName) throws Exception;
+
+    Folder updateFolderName(Long folderId, String newFolderName) throws Exception;
 }

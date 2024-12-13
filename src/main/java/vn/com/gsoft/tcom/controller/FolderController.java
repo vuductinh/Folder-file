@@ -10,7 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vn.com.gsoft.tcom.entity.Folder;
 import vn.com.gsoft.tcom.service.FolderService;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -20,6 +23,11 @@ public class FolderController {
     @Autowired
     private FolderService service;
 
+//    @GetMapping("/tree")
+//    public List<Folder> getFolderTree() throws Exception {
+//        return service.getFolderTree();
+//    }
+
     @GetMapping("/tree")
     public String listItems(Model model) throws Exception {
         var lst = service.getFolderTree();
@@ -27,14 +35,24 @@ public class FolderController {
         return "tree";
     }
 
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> uploadFolder(@RequestParam("files") List<MultipartFile> files) {
+    @PostMapping("/createFolder")
+    public ResponseEntity<Folder> createFolder(@RequestParam(required = false) Long idFolder, @RequestParam String folderName) {
         try {
-            service.uploadFolder(files);
-            return ResponseEntity.ok("Folder uploaded successfully");
+            Folder newFolder = service.createFolder(idFolder, folderName);
+            return new ResponseEntity<>(newFolder, HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload folder: " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/updateFolderName")
+    public ResponseEntity<Folder> updateFolderName(@RequestParam(required = false) Long idFolder, @RequestParam String newFolderName) {
+        try {
+            Folder newFolder = service.updateFolderName(idFolder, newFolderName);
+            return new ResponseEntity<>(newFolder, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
