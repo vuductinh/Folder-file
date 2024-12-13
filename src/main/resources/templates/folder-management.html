@@ -38,6 +38,14 @@
                                 <i class="fa fa-folder" aria-hidden="true"></i>
                                 <span th:text="${childrenFolder.name}"></span>
                             </span>
+                            <ul th:each="fileChildren : ${childrenFolder.files}">
+                                <li>
+                             <span>
+                                <i class="fa fa-file" aria-hidden="true"></i>
+                                <span th:text="${fileChildren.name}"></span>
+                            </span>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
