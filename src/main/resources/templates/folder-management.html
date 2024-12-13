@@ -27,17 +27,23 @@
         <div class="col-md-3" style="height: 98vh; overflow:scroll;">
             <label><i class="fa fa-folder"></i> Folder</label>
             <ul th:each="item : ${tree}">
-                <li th:text="${item.name}"><i class="fa fa-folder" aria-hidden="true"></i>
+                <li th:utext="'<i class=\'fa fa-folder\' aria-hidden=\'true\'></i> ' + item.name">
                     <ul th:each="childrenFolder : ${item.children}">
                         <li th:text="${childrenFolder.name}"><i class="fa fa-file" aria-hidden="true"></i>
                             <ul th:each="childrenFolder : ${item.children}">
-                                <li th:text="${childrenFolder.name}"><i class="fa fa-file" aria-hidden="true"></i>
+                                <li th:utext="'<i class=\'fa fa-folder\' aria-hidden=\'true\'></i> ' + childrenFolder.name">
                                     <ul th:each="childrenFile : ${item.files}">
-                                        <li th:text="${childrenFile.name}"><i class="fa fa-file" aria-hidden="true"></i>
+                                        <li th:utext="'<i class=\'fa fa-file\' aria-hidden=\'true\'></i> ' + childrenFile.name">
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <ul th:each="file : ${item.files}">
+                        <li th:utext="'<i class=\'fa fa-file\' aria-hidden=\'true\'></i> ' + file.name">
                         </li>
                     </ul>
                 </li>
