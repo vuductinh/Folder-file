@@ -1,18 +1,15 @@
 package vn.com.gsoft.tcom.entity;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
-@Builder
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = File.TABLE_NAME)
-public class File extends BaseEntity{
-    public static final String TABLE_NAME = "File";
+@Builder
+@Entity
+@Table(name = "File")
+public class File{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")

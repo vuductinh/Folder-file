@@ -1,6 +1,5 @@
 # Server
 server:
-  port: 2302
   tomcat:
     accept-count: 1000
 
