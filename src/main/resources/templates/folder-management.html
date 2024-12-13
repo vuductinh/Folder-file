@@ -26,16 +26,21 @@
     <div class="row" style="margin-top:10px;">
         <div class="col-md-3" style="height: 98vh; overflow:scroll;">
             <label><i class="fa fa-folder"></i> Folder</label>
-            <ul>
-                <li><i class="fa fa-folder" aria-hidden="true"></i> Folder1</li>
-                <li> <i class="fa fa-folder" aria-hidden="true"></i> Folder2
-                    <ul>
-                        <li><i class="fa fa-file" aria-hidden="true"></i> File1</li>
-                        <li><i class="fa fa-file" aria-hidden="true"></i> File2</li>
+            <ul th:each="item : ${tree}">
+                <li th:text="${item.name}"><i class="fa fa-folder" aria-hidden="true"></i>
+                    <ul th:each="childrenFolder : ${item.children}">
+                        <li th:text="${childrenFolder.name}"><i class="fa fa-file" aria-hidden="true"></i>
+                            <ul th:each="childrenFolder : ${item.children}">
+                                <li th:text="${childrenFolder.name}"><i class="fa fa-file" aria-hidden="true"></i>
+                                    <ul th:each="childrenFile : ${item.files}">
+                                        <li th:text="${childrenFile.name}"><i class="fa fa-file" aria-hidden="true"></i>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
-                <li><i class="fa fa-folder" aria-hidden="true"></i> Folder3</li>
-                <li><i class="fa fa-folder" aria-hidden="true"></i> Folder4</li>
             </ul>
         </div>
         <div class="col-md-9">
