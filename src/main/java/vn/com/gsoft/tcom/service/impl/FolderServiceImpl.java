@@ -55,11 +55,11 @@ public class FolderServiceImpl implements FolderService {
                 throw new IllegalArgumentException("Đường dẫn không hợp lệ " + fullPath);
             }
             String[] parts = fullPath.split("/");
-            String folderPath = String.join("/", Arrays.copyOf(parts, parts.length - 1));
-            String fileName = parts[parts.length - 1];
+            String folderPath = String.join("/", Arrays.copyOf(parts, parts.length - 1)); // Đường dẫn thư mục
+            String fileName = parts[parts.length - 1]; // Tên tệp
             Long parentId = folderMap.get(folderPath);
             if (parentId == null) {
-                parentId = createFolderHierarchy(folderPath, folderMap);
+                parentId = createFolderHierarchy(folderPath, folderMap);  // Tạo thư mục nếu chưa có
             }
             saveFileToDatabase(file, parentId, fileName);
         }
@@ -68,11 +68,10 @@ public class FolderServiceImpl implements FolderService {
     private Long createFolderHierarchy(String folderPath, Map<String, Long> folderMap) {
         String[] pathParts = folderPath.split("/");
         Long parentId = null;
-
         StringBuilder currentPath = new StringBuilder();
         for (String part : pathParts) {
             currentPath.append(part).append("/");
-            String currentFolder = currentPath.toString().replaceAll("/$", ""); // remove trailing slash
+            String currentFolder = currentPath.toString().replaceAll("/$", ""); // Loại bỏ dấu gạch chéo ở cuối
             if (!folderMap.containsKey(currentFolder)) {
                 Long finalParentId = parentId;
                 Folder folder = folderRepository.findByNameAndIdFolder(part, finalParentId)
@@ -96,4 +95,5 @@ public class FolderServiceImpl implements FolderService {
         File fileEntity = new File(null, fileName, fileStoragePath, folderId, null);
         fileRepository.save(fileEntity);
     }
+
 }
