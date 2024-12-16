@@ -20,10 +20,13 @@ public class File{
     private Long id;
     @Column(name = "Name")
     private String name;
-    @Column(name = "File_Path")
-    private String filePath;
     @Column(name = "Id_Folder")
     private Long idFolder;
+    @Lob
+    @Column(name = "Image_Data")
+    private byte[] imageData;
+    @Column(name = "Type")
+    private String type;
     @CreatedDate
     @Column(name="Created")
     private Date created;
@@ -32,4 +35,6 @@ public class File{
     private Date modified;
     @Transient
     private Folder folder;
+    @Transient
+    private String path;
 }

@@ -1,12 +1,21 @@
 package vn.com.gsoft.tcom.service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import vn.com.gsoft.tcom.entity.Folder;
 
 import java.util.List;
 
 public interface FolderService {
-    List<Folder> getFolderTree () throws Exception;
+    List<Folder> folderTree () throws Exception;
 
-    Folder createFolder(Long idFolder, String folderName) throws Exception;
+    Folder details(Long idFolder) throws Exception;
 
-    Folder updateFolderName(Long folderId, String newFolderName) throws Exception;
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    Folder create(Long idFolder, String name) throws Exception;
+
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    Folder update(Long idFolder, String newName) throws Exception;
+
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    boolean delete(Long idFolder) throws Exception;
 }

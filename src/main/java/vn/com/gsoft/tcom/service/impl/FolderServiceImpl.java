@@ -10,53 +10,93 @@ import java.util.*;
 
 @Service
 public class FolderServiceImpl implements FolderService {
-
     @Autowired
-    private FolderRepository folderRepository;
-
+    private FolderRepository hdrRepo;
     @Autowired
-    private FileRepository fileRepository;
+    private FileRepository dtlRepo;
 
-    public List<Folder> getFolderTree() throws Exception {
-        List<Folder> rootFolders = folderRepository.findAllByIdFolderIsNull();
-        for (Folder folder : rootFolders) {
+    public List<Folder> folderTree() throws Exception {
+        List<Folder> folders = hdrRepo.findAllByIdFolderIsNull();
+        for (Folder folder : folders) {
             loadSubFoldersAndFiles(folder);
         }
-        return rootFolders;
+        return folders;
     }
 
     private void loadSubFoldersAndFiles(Folder folder) {
         if (folder != null) {
-            List<Folder> subFolders = folderRepository.findAllByIdFolder(folder.getId());
-            folder.setChildren(subFolders);
-            List<File> files = fileRepository.findAllByIdFolder(folder.getId());
+            List<Folder> folders = hdrRepo.findAllByIdFolder(folder.getId());
+            folder.setChildren(folders);
+            List<File> files = dtlRepo.findAllByIdFolder(folder.getId());
             folder.setFiles(files);
-            for (Folder subFolder : subFolders) {
+            for (Folder subFolder : folders) {
                 loadSubFoldersAndFiles(subFolder);
             }
         }
     }
 
     @Override
-    public Folder createFolder(Long idFolder, String folderName) throws Exception {
-        Folder folder = new Folder();
-        if (idFolder != null) {
-            Folder parentFolder = folderRepository.findById(idFolder)
-                    .orElseThrow(() -> new Exception("Không tìm thấy thư mục"));
-            List<Folder> parentFolders = new ArrayList<>();
-            parentFolders.add(parentFolder);
-            folder.setChildren(parentFolders);
+    public Folder details(Long idFolder) throws Exception {
+        if (idFolder == null) {
+            throw new Exception("Thư mục không hợp lệ!");
         }
-        folder.setName(folderName);
-        folder.setCreated(new Date());
-        return folderRepository.save(folder);
+        Folder parentFolder = hdrRepo.findById(idFolder).orElse(null);
+        if (parentFolder == null) {
+            throw new Exception("Không tìm thấy thư mục với id: " + idFolder);
+        }
+        buildPath(parentFolder);
+        List<Folder> subFolders = hdrRepo.findAllByIdFolder(idFolder);
+        List<File> files = dtlRepo.findAllByIdFolder(idFolder);
+        parentFolder.setChildren(subFolders);
+        parentFolder.setFiles(files);
+        return parentFolder;
+    }
+
+    private void buildPath(Folder folder) {
+        if (folder.getIdFolder() != null) {
+            Folder parentFolder = hdrRepo.findById(folder.getIdFolder()).orElse(null);
+            if (parentFolder != null) {
+                buildPath(parentFolder);
+                folder.setPath(parentFolder.getPath() + "/" + folder.getName());
+            }
+        } else {
+            folder.setPath(folder.getName());
+        }
     }
 
     @Override
-    public Folder updateFolderName(Long folderId, String newFolderName) throws Exception {
-        Folder folder = folderRepository.findById(folderId)
+    public Folder create(Long idFolder, String name) throws Exception {
+        Folder folder = new Folder();
+        folder.setIdFolder(idFolder);
+        folder.setName(name);
+        folder.setCreated(new Date());
+        hdrRepo.save(folder);
+        return folder;
+    }
+
+    @Override
+    public Folder update(Long idFolder, String newName) throws Exception {
+        Folder folder = hdrRepo.findById(idFolder)
                 .orElseThrow(() -> new Exception("Không tìm thấy thư mục"));
-        folder.setName(newFolderName);
-        return folderRepository.save(folder);
+        folder.setName(newName);
+        return hdrRepo.save(folder);
+    }
+
+    @Override
+    public boolean delete(Long idFolder) throws Exception {
+        Folder parentFolder = hdrRepo.findById(idFolder).orElse(null);
+        if (parentFolder == null) {
+            throw new Exception("Không tìm thấy thư mục với id: " + idFolder);
+        }
+        List<File> files = dtlRepo.findAllByIdFolder(idFolder);
+        for (File file : files) {
+            dtlRepo.delete(file);
+        }
+        List<Folder> subFolders = hdrRepo.findAllByIdFolder(idFolder);
+        for (Folder subFolder : subFolders) {
+            delete(subFolder.getId());
+        }
+        hdrRepo.delete(parentFolder);
+        return true;
     }
 }

@@ -89,8 +89,9 @@
                 <div class="col-md-12" >
                     <div style="float:right;">
                         <button class="btn btn-danger" onclick="openModal()"><i class="fa fa-plus" aria-hidden="true"></i> Create</button>
-                        <button class="btn btn-danger"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
-                        <button class="btn btn-danger"><i class="fa fa-download" aria-hidden="true"></i>Download</button>
+                        <button class="btn btn-danger" onclick="uploadFile()"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
+                        <input type="file" id="fileInput" onchange="onSelectFile()" name="files" multiple style="display: none;">
+                        <button class="btn btn-danger" onclick="downloadFile()"><i class="fa fa-download" aria-hidden="true"></i>Download</button>
                         <button class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i>Delete</button>
                     </div>
 
@@ -110,11 +111,13 @@
                         </thead>
                         <tbody id="file-display"></tbody>
                     </table>
+                    <input type="text" id="idParent" style="display:none;" />
+                    <input type="text" id="idFile" style="display:none;" />
                 </div>
                 <div class="col-md-12" style=" position: fixed;left: 0;bottom: 10px;width: 100%;color: white;text-align: center;">
                     <footer id="footerId">
                         <div style="margin:0 auto;">
-                            <button class="btn btn-danger"><i class="fas fa-arrow-left" aria-hidden="true"></i> Return to the previous level</button>
+                            <button class="btn btn-danger" onclick="backFolder()"><i class="fas fa-arrow-left" aria-hidden="true"></i> Return to the previous level</button>
                         </div>
                     </footer>
                 </div>

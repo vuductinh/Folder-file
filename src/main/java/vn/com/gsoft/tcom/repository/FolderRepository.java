@@ -12,6 +12,4 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     List<Folder> findAllByIdFolderIsNull();
 
     List<Folder> findAllByIdFolder(Long idFolder);
-
-    Optional<Folder> findByNameAndIdFolder(String name, Long idFolder);
 }

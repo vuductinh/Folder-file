@@ -33,4 +33,6 @@ public class Folder{
     private List<Folder> children;
     @Transient
     private List<File> files;
+    @Transient
+    private String path;
 }
