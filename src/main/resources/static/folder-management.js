@@ -110,3 +110,45 @@ function addFolder(){
    closeModal();
    getFolders();
 }
+
+function uploadFile(){
+    const fileInput = document.getElementById("fileInput");
+    fileInput.click();
+    }
+
+async function onSelectFile() {
+    const fileInput = document.getElementById("fileInput");
+    const files = fileInput.files;
+
+    if (!files || files.length === 0) {
+        alert("No files selected!");
+        return;
+    }
+    const formData = new FormData();
+    formData.append("id", document.getElementById("idParent").value);
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files[]", files[i]);
+    }
+
+    try {
+        const response = await fetch("/get-files/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (response.ok) {
+            getFolders();
+        } else {
+            alert("lỗi update");
+        }
+    } catch (error) {
+
+    }
+}
+
+function  backFolder(){
+   var id = document.getElementById("idParent").value;
+   if(id){
+   showFiles(id);
+   }
+}
