@@ -129,11 +129,12 @@
 <div id="addFolderModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Add New Folder</h2>
+        <h2 id="label-folder">Add folder</h2>
         <label for="folderName">Folder Name:</label>
         <input class="form-control" type="text" id="folderName" name="folderName" required>
+        <input class="form-control" style="display: none;" type="text" id="folderId" name="folderId" required>
         <br>
-        <button class="btn btn-danger" onclick="addFolder()">Add Folder</button>
+        <button id="btn-save-folder" class="btn btn-danger" onclick="addFolder()">Add Folder</button>
     </div>
 </div>
 </body>

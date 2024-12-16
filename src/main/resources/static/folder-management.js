@@ -17,7 +17,7 @@ function showFiles(folderId) {
                 <td onclick="showFiles(${file.id})"><i class="fa fa-folder" aria-hidden="true"></i> ${file.name}</td>
                 <td>${updatedOn}</td>
                 <td>${createdDate}</td>
-                <td><button class="btn-sm btn-danger">Change folder</button></td>
+                <td><button class="btn-sm btn-danger" onclick="editFolder('${file.name}', ${file.id})">Change folder</button></td>
             `;
                 fileDisplay.appendChild(row);
             });
@@ -29,7 +29,7 @@ function showFiles(folderId) {
                 <td onclick="showIdFile(${file.id})"><i class="fa fa-file" aria-hidden="true"></i> ${file.name}</td>
                 <td>${updatedOn}</td>
                 <td>${createdDate}</td>
-                <td><button class="btn-sm btn-danger">Change folder</button></td>
+                <td></td>
             `;
                 fileDisplay.appendChild(row);
             });
@@ -105,21 +105,60 @@ function closeModal() {
 
 function addFolder(){
     var name = document.getElementById("folderName").value;
-    if(!name){
-        alert('Name is not null');
-        return;
-    }
-    if(preItems.filter(x=>x.name == name).length > 0){
-        alert('Name is exit');
-        return;
-    }
-    var response = fetch('/folders/createFolder' + `?idFolder=${document.getElementById("idParent").value}&name=${encodeURIComponent(name)}`, {
-        method: "POST",
-    });
-    document.getElementById("folderName").value = '';
-    closeModal();
-    getFolders();
-    showFiles(document.getElementById("idParent").value);
+    var id = document.getElementById("folderId").value;
+       if(id){
+       getEditFolder(name, id);
+       }else{
+       if(!name){
+               alert('Name is not null');
+               return;
+           }
+           if(preItems.filter(x=>x.name == name).length > 0){
+               alert('Name is exit');
+               return;
+           }
+           var response = fetch('/folders/createFolder' + `?idFolder=${document.getElementById("idParent").value}&name=${encodeURIComponent(name)}`, {
+               method: "POST",
+           });
+           document.getElementById("folderName").value = '';
+           closeModal();
+           getFolders();
+           showFiles(document.getElementById("idParent").value);
+       }
+
+}
+
+function getEditFolder(name, id){
+   var name = document.getElementById("folderName").value;
+   var id = document.getElementById("folderId").value;
+   if(!name){
+      alert('Name is not null');
+      return;
+   }
+   var response = fetch('/folders/updateFolder' + `?idFolder=${id}&name=${encodeURIComponent(name)}`, {
+                              method: "POST",
+                          });
+
+   //preItems.push(item);
+   const treeElement = document.getElementById("tree");
+          if (treeElement) {
+              treeElement.innerHTML = "";
+          }
+   renderTree(preItems, treeElement);
+   document.getElementById("folderName").value = '';
+   document.getElementById("folderId").value = '';
+   closeModal();
+   getFolders();
+   document.getElementById("label-folder").textContent = 'Add folder';
+   document.getElementById("btn-save-folder").textContent = 'Add Folder';
+}
+
+function editFolder(name, id){
+   document.getElementById("label-folder").textContent = 'Change name folder';
+   document.getElementById("btn-save-folder").textContent = 'Change folder';
+   document.getElementById("folderName").value = name;
+   document.getElementById("folderId").value = id;
+   openModal();
 }
 
 function uploadFile(){
