@@ -99,11 +99,14 @@ function addFolder(){
       alert('Name is exit');
       return;
    }
-   var item = {id: preItems.length + 1, name : name, children : [], file: []};
-   preItems.push(item);
+   var response = fetch('/get-files/create' + `?idParent=${0}&name=${encodeURIComponent(name)}`, {
+                              method: "POST",
+                          });
+
+   //preItems.push(item);
    const treeElement = document.getElementById("tree");
    renderTree(preItems, treeElement);
    document.getElementById("folderName").value = '';
    closeModal();
-   //getFolder();
+   getFolders();
 }
